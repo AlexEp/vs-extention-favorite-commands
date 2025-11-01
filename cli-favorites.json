@@ -1,0 +1,44 @@
+[
+  {
+    "name": "default",
+    "commands": [
+      {
+        "label": "Git Status",
+        "command": "git status"
+      },
+      {
+        "label": "Git Pull (Rebase)",
+        "command": "git pull --rebase"
+      },
+      {
+        "label": "pushfl ",
+        "command": "git pushfl"
+      },
+      {
+        "label": "syncdev",
+        "command": "git syncdev"
+      },
+      {
+        "label": "undo-x",
+        "command": "git undo-x 1"
+      }
+    ]
+  },
+  {
+    "name": "OBT",
+    "commands": [
+      {
+        "label": "lock + be",
+        "command": "npm run start:loc-locbackend"
+      },
+      {
+        "label": "loc",
+        "command": "run start:loc"
+      },
+      {
+        "label": "check lint",
+        "command": "npm run lint:error"
+      }
+    ]
+  }
+]
