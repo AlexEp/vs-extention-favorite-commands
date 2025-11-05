@@ -1,4 +1,4 @@
-const vscode = require('vscode');
+'''const vscode = require('vscode');
 
 // --- CONSTANTS ---
 const CONFIG_SECTION = 'favoriteGitCommands';
@@ -14,7 +14,8 @@ function activate(context) {
     // Create the Tree Data Provider
     const commandProvider = new CommandProvider();
     const treeView = vscode.window.createTreeView('favoriteGitCommandsView', {
-        treeDataProvider: commandProvider
+        treeDataProvider: commandProvider,
+        dragAndDropController: new CommandDragAndDropController(commandProvider)
     });
     context.subscriptions.push(treeView);
 
@@ -169,6 +170,101 @@ class CommandProvider {
             folders,
             vscode.ConfigurationTarget.Global
         );
+    }
+
+    /**
+     * Moves a tree item (folder or command) to a new position.
+     * @param {FolderTreeItem | CommandTreeItem} item The item to move.
+     * @param {FolderTreeItem} targetFolder The folder to move the item into.
+     * @param {number} newIndex The new index for the item.
+     */
+    async moveItem(item, targetFolder, newIndex) {
+        const folders = await this.getFolders();
+
+        if (item instanceof FolderTreeItem) {
+            // Move Folder
+            const folderToMove = folders.splice(item.folderIndex, 1)[0];
+            folders.splice(newIndex, 0, folderToMove);
+        } else if (item instanceof CommandTreeItem) {
+            // Move Command
+            const sourceFolder = folders[item.folderIndex];
+            const commandToMove = sourceFolder.commands.splice(item.commandIndex, 1)[0];
+
+            if (targetFolder) {
+                const destinationFolderIndex = folders.findIndex(f => f.name === targetFolder.label);
+                if (destinationFolderIndex !== -1) {
+                    const destinationFolder = folders[destinationFolderIndex];
+                    destinationFolder.commands.splice(newIndex, 0, commandToMove);
+                }
+            } else {
+                // This case might happen if dropping on the root
+                // For simplicity, we'll add it to the same folder at the new position
+                sourceFolder.commands.splice(newIndex, 0, commandToMove);
+            }
+        }
+
+        await this.saveFolders(folders);
+        this.refresh();
+    }
+}
+
+// --- DRAG AND DROP CONTROLLER ---
+
+class CommandDragAndDropController {
+    constructor(provider) {
+        this.provider = provider;
+        this.supportedMimeTypes = ['application/vnd.code.tree.favoriteGitCommandsView'];
+    }
+
+    handleDrag(source, dataTransfer, token) {
+        if (source.length > 1) {
+            // For simplicity, only allow dragging one item at a time
+            return;
+        }
+        const item = source[0];
+        if (item instanceof FolderTreeItem && item.isDefault) {
+            // Prevent dragging the default folder
+            return;
+        }
+        dataTransfer.set(this.supportedMimeTypes[0], new vscode.DataTransferItem(item));
+    }
+
+    async handleDrop(target, dataTransfer, token) {
+        const transferItem = dataTransfer.get(this.supportedMimeTypes[0]);
+        if (!transferItem) {
+            return;
+        }
+
+        const draggedItem = transferItem.value;
+        let targetFolder;
+        let newIndex;
+
+        if (target) {
+            if (target instanceof FolderTreeItem) {
+                targetFolder = target;
+                if (draggedItem instanceof CommandTreeItem) {
+                    newIndex = target.commands.length; // Drop at the end of the folder
+                } else if (draggedItem instanceof FolderTreeItem) {
+                    newIndex = target.folderIndex; // Drop before the target folder
+                }
+            } else if (target instanceof CommandTreeItem) {
+                const folders = await this.provider.getFolders();
+                const targetFolderData = folders[target.folderIndex];
+                targetFolder = new FolderTreeItem(targetFolderData.name, targetFolderData.commands, target.folderIndex);
+                newIndex = target.commandIndex; // Drop at the position of the target command
+            }
+        } else {
+            // Dropping on the root of the tree
+            if (draggedItem instanceof FolderTreeItem) {
+                const folders = await this.provider.getFolders();
+                newIndex = folders.length;
+            } else {
+                // Don't allow dropping commands on the root
+                return;
+            }
+        }
+
+        this.provider.moveItem(draggedItem, targetFolder, newIndex);
     }
 }
 
@@ -468,4 +564,4 @@ module.exports = {
     activate,
     deactivate
 };
-
+'''

@@ -2,7 +2,7 @@
   "name": "favorite-git-commands",
   "displayName": "Favorite CLI Commands",
   "description": "Keep a list of favorite CLI commands in the sidebar and run them with a click.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "publisher": "AlexeyEppelman",
   "author": {
     "name": "Alexey Eppelman"
