@@ -10,9 +10,12 @@ const DEFAULT_FOLDER_NAME = 'default';
 /**
  * @param {vscode.ExtensionContext} context
  */
-function activate(context) {
+async function activate(context) {
     // Create the Tree Data Provider
     const commandProvider = new CommandProvider();
+    const folders = await commandProvider.getFolders();
+    await commandProvider.saveFolders(folders);
+
     const treeView = vscode.window.createTreeView('favoriteGitCommandsView', {
         treeDataProvider: commandProvider,
         dragAndDropController: new CommandDragAndDropController(commandProvider)
@@ -151,10 +154,10 @@ class CommandProvider {
         let defaultFolder = folders.find(f => f.name === DEFAULT_FOLDER_NAME);
 
         if (!defaultFolder) {
-            // If default folder doesn't exist, create and add it
+            // If default folder doesn't exist, create it
             defaultFolder = { name: DEFAULT_FOLDER_NAME, commands: [] };
             folders.unshift(defaultFolder); // Add to the beginning
-            await this.saveFolders(folders);
+            // Don't save here, let the caller decide when to save
         }
 
         return folders;
