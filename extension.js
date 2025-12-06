@@ -1,4 +1,4 @@
-'''const vscode = require('vscode');
+const vscode = require('vscode');
 
 // --- CONSTANTS ---
 const CONFIG_SECTION = 'favoriteGitCommands';
@@ -68,8 +68,8 @@ async function activate(context) {
         )
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.pasteCommand', (item) =>
-            actions.pasteCommand(item)
+        vscode.commands.registerCommand('favorite-git-commands.copyToClipboard', (item) =>
+            actions.copyToClipboard(item)
         )
     );
 
@@ -84,7 +84,7 @@ async function activate(context) {
             actions.exportCommands(commandProvider)
         )
     );
-    
+
     // Refresh tree when configuration changes
     context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration((e) => {
@@ -125,7 +125,7 @@ class CommandProvider {
                 );
             });
         }
-        
+
         if (!element) {
             // Root elements are Folders
             return folders.map((folder, index) => {
@@ -148,7 +148,7 @@ class CommandProvider {
         let folders = vscode.workspace.getConfiguration(CONFIG_SECTION).get(CONFIG_KEY_FOLDERS, []);
 
         if (!Array.isArray(folders)) {
-             folders = [];
+            folders = [];
         }
 
         let defaultFolder = folders.find(f => f.name === DEFAULT_FOLDER_NAME);
@@ -285,7 +285,7 @@ class FolderTreeItem extends vscode.TreeItem {
         this.commands = commands;
         this.folderIndex = folderIndex;
         this.isDefault = isDefault;
-        
+
         this.contextValue = 'folderItem';
         this.iconPath = new vscode.ThemeIcon('folder');
         this.tooltip = `${commands.length} command(s)`;
@@ -338,14 +338,13 @@ const actions = {
     },
 
     /**
-     * Pastes the command into the terminal without running.
+     * Copies the command to the clipboard.
      * @param {CommandTreeItem} item
      */
-    pasteCommand(item) {
+    async copyToClipboard(item) {
         if (!item || !(item instanceof CommandTreeItem)) return;
-        const terminal = this.getTerminal();
-        // We can't directly "paste", but we can send text without the newline
-        terminal.sendText(item.commandString, false); 
+        await vscode.env.clipboard.writeText(item.commandString);
+        vscode.window.showInformationMessage(`Copied "${item.commandString}" to clipboard.`);
     },
 
     /**
@@ -422,7 +421,7 @@ const actions = {
             vscode.window.showErrorMessage('Please add a command by clicking the "+" icon on a folder.');
             return;
         }
-        
+
         const label = await vscode.window.showInputBox({
             prompt: 'Enter a label for the command',
             placeHolder: 'e.g., "Git Status"'
@@ -498,7 +497,7 @@ const actions = {
     async exportCommands(provider) {
         const folders = await provider.getFolders();
         const jsonContent = JSON.stringify(folders, null, 2);
-        
+
         try {
             const uri = await vscode.window.showSaveDialog({
                 saveLabel: 'Export Commands',
@@ -535,14 +534,14 @@ const actions = {
             const uri = uris[0];
             const readData = await vscode.workspace.fs.readFile(uri);
             const jsonContent = new (typeof TextDecoder === 'undefined' ? require('util').TextDecoder : TextDecoder)().decode(readData);
-            
+
             const importedFolders = JSON.parse(jsonContent);
 
             // Basic validation
             if (!Array.isArray(importedFolders) || (importedFolders.length > 0 && (importedFolders[0].name === undefined || importedFolders[0].commands === undefined))) {
                 throw new Error('Invalid JSON format. Expected an array of folders.');
             }
-            
+
             const confirm = await vscode.window.showQuickPick(['No', 'Yes'], {
                 placeHolder: 'Are you sure you want to import? This will overwrite ALL current commands.'
             });
@@ -561,10 +560,9 @@ const actions = {
 };
 
 // --- DEACTIVATION FUNCTION ---
-function deactivate() {}
+function deactivate() { }
 
 module.exports = {
     activate,
     deactivate
 };
-'''
