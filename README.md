@@ -19,10 +19,11 @@ A simple VS Code extension to store, organize, and run your favorite or most-use
 - **Command Organization**: Store commands in a clean, collapsible folder structure.
 - **Default Folder**: A "default" folder is always present for your most common commands.
 - **Click to Run**: Click the **Run** button (`$(play)`) to execute the command in your active terminal.
-- **Click to Paste**: Click the **Paste** button (`$(clippy)`) to paste the command into your terminal without running it.
+- **Click to Copy**: Click the **Copy** button (`$(copy)`) to copy the command to your clipboard.
+- **Move Commands**: Move commands easily between folders.
 - **Full CRUD**:
   - **Folders**: Add, Rename, and Delete folders.
-  - **Commands**: Add, Edit, and Delete commands within any folder.
+  - **Commands**: Add, Edit, Delete, and Move commands.
 - **Import/Export**: Back up all your commands and folders to a JSON file, and import them later or on another machine.
 
 ## How to Use
@@ -37,7 +38,8 @@ A simple VS Code extension to store, organize, and run your favorite or most-use
 
 - **Add Command**: Hover over a folder and click the `$(add)` icon.
 - **Run Command**: Hover over a command and click the `$(play)` icon.
-- **Paste Command**: Hover over a command and click the `$(clippy)` icon.
+- **Copy Command**: Hover over a command and click the `$(copy)` icon to copy it to clipboard.
+- **Move Command**: Hover over a command and click the `$(arrow-small-right)` icon to move it to another folder.
 - **Edit Command**: Hover over a a command and click the `$(edit)` icon.
 - **Delete Command**: Hover over a command and click the `$(trash)` icon.
 
