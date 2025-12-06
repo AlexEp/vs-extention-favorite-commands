@@ -15,3 +15,4 @@
 - Updated `extension.js` to implement `vscode.env.clipboard.writeText`.
 - Cleaned up syntax errors (stray quotes) in `extension.js`.
 - Updated `package.json` with new command ID and icon.
+- Added "Move Command" functionality to move commands between folders.

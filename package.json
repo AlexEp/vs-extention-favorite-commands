@@ -88,6 +88,11 @@
         "icon": "$(copy)"
       },
       {
+        "command": "favorite-git-commands.moveCommand",
+        "title": "Move Command",
+        "icon": "$(arrow-small-right)"
+      },
+      {
         "command": "favorite-git-commands.importCommands",
         "title": "Import from JSON",
         "icon": "$(json)"
@@ -148,14 +153,19 @@
           "group": "inline@2"
         },
         {
-          "command": "favorite-git-commands.editCommand",
+          "command": "favorite-git-commands.moveCommand",
           "when": "view == favoriteGitCommandsView && viewItem == commandItem",
           "group": "inline@3"
         },
         {
-          "command": "favorite-git-commands.deleteCommand",
+          "command": "favorite-git-commands.editCommand",
           "when": "view == favoriteGitCommandsView && viewItem == commandItem",
           "group": "inline@4"
+        },
+        {
+          "command": "favorite-git-commands.deleteCommand",
+          "when": "view == favoriteGitCommandsView && viewItem == commandItem",
+          "group": "inline@5"
         }
       ]
     },

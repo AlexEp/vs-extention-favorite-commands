@@ -72,6 +72,11 @@ async function activate(context) {
             actions.copyToClipboard(item)
         )
     );
+    context.subscriptions.push(
+        vscode.commands.registerCommand('favorite-git-commands.moveCommand', (item) =>
+            actions.moveCommand(item, commandProvider)
+        )
+    );
 
     // Import/Export Commands
     context.subscriptions.push(
@@ -467,6 +472,39 @@ const actions = {
             label: newLabel,
             command: newCommand
         };
+        await provider.saveFolders(folders);
+        provider.refresh();
+    },
+
+    /**
+     * Moves a command to a different folder.
+     * @param {CommandTreeItem} item
+     * @param {CommandProvider} provider
+     */
+    async moveCommand(item, provider) {
+        if (!item || !(item instanceof CommandTreeItem)) return;
+
+        const folders = await provider.getFolders();
+
+        // Filter out the current folder from available targets
+        const availableFolders = folders
+            .map((f, index) => ({ label: f.name, index: index }))
+            .filter((f, index) => index !== item.folderIndex);
+
+        if (availableFolders.length === 0) {
+            vscode.window.showInformationMessage('No other folders available to move to.');
+            return;
+        }
+
+        const selectedFolder = await vscode.window.showQuickPick(availableFolders, {
+            placeHolder: `Select a folder to move "${item.label}" to`
+        });
+
+        if (!selectedFolder) return;
+
+        const commandToMove = folders[item.folderIndex].commands.splice(item.commandIndex, 1)[0];
+        folders[selectedFolder.index].commands.push(commandToMove);
+
         await provider.saveFolders(folders);
         provider.refresh();
     },
