@@ -24,7 +24,7 @@ The project follows a standard VS Code extension architecture without a build st
     -   Data is stored in VS Code's global/workspace settings under `favoriteGitCommands.folders`.
     -   Schema is defined in `package.json`.
 3.  **UI**:
-    -   Contributes a view container `favorite-git-commands-container` to the Activity Bar.
+    -   Contributes a view container `favorite-cli-commands-container` to the Activity Bar.
     -   Contributes a view `favoriteGitCommandsView`.
 
 ### Data Model

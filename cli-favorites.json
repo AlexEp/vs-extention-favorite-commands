@@ -13,11 +13,19 @@
     ]
   },
   {
-    "name": "Alex",
+    "name": "System Utilities",
     "commands": [
       {
-        "label": "test",
-        "command": "test"
+        "label": "Check Disk Usage",
+        "command": "df -h"
+      },
+      {
+        "label": "List Open Ports",
+        "command": "netstat -ano"
+      },
+      {
+        "label": "Show Public IP",
+        "command": "curl ifconfig.me"
       }
     ]
   }

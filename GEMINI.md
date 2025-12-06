@@ -16,3 +16,4 @@
 - Cleaned up syntax errors (stray quotes) in `extension.js`.
 - Updated `package.json` with new command ID and icon.
 - Added "Move Command" functionality to move commands between folders.
+- Refactored all "favorite-git-" strings to "favorite-cli-" in `package.json`, `extension.js`, and `package-lock.json`.

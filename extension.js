@@ -24,68 +24,68 @@ async function activate(context) {
 
     // Register all commands
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.refresh', () =>
+        vscode.commands.registerCommand('favorite-cli-commands.refresh', () =>
             commandProvider.refresh()
         )
     );
 
     // Folder Commands
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.addFolder', () =>
+        vscode.commands.registerCommand('favorite-cli-commands.addFolder', () =>
             actions.addFolder(commandProvider)
         )
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.renameFolder', (item) =>
+        vscode.commands.registerCommand('favorite-cli-commands.renameFolder', (item) =>
             actions.renameFolder(item, commandProvider)
         )
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.deleteFolder', (item) =>
+        vscode.commands.registerCommand('favorite-cli-commands.deleteFolder', (item) =>
             actions.deleteFolder(item, commandProvider)
         )
     );
 
     // Command Item Commands
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.addCommand', (item) =>
+        vscode.commands.registerCommand('favorite-cli-commands.addCommand', (item) =>
             actions.addCommand(item, commandProvider)
         )
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.editCommand', (item) =>
+        vscode.commands.registerCommand('favorite-cli-commands.editCommand', (item) =>
             actions.editCommand(item, commandProvider)
         )
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.deleteCommand', (item) =>
+        vscode.commands.registerCommand('favorite-cli-commands.deleteCommand', (item) =>
             actions.deleteCommand(item, commandProvider)
         )
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.runCommand', (item) =>
+        vscode.commands.registerCommand('favorite-cli-commands.runCommand', (item) =>
             actions.runCommand(item)
         )
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.copyToClipboard', (item) =>
+        vscode.commands.registerCommand('favorite-cli-commands.copyToClipboard', (item) =>
             actions.copyToClipboard(item)
         )
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.moveCommand', (item) =>
+        vscode.commands.registerCommand('favorite-cli-commands.moveCommand', (item) =>
             actions.moveCommand(item, commandProvider)
         )
     );
 
     // Import/Export Commands
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.importCommands', () =>
+        vscode.commands.registerCommand('favorite-cli-commands.importCommands', () =>
             actions.importCommands(commandProvider)
         )
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand('favorite-git-commands.exportCommands', () =>
+        vscode.commands.registerCommand('favorite-cli-commands.exportCommands', () =>
             actions.exportCommands(commandProvider)
         )
     );
